@@ -42,8 +42,8 @@ public class RandomUtil {
         if (!domain.contains(".")) {
             domain += ".com";
         }
-        return RandomStringFactory.Builder.prepare(getRandomPositiveInteger(0, 16)).setAfterString(domain).build().makeItToString();
-
+        return RandomStringFactory.Builder.prepare(getRandomPositiveInteger(4 , 16))
+                .setAfterString(domain).setRange(LOWER_CASE).build().makeItToString();
     }
 
     /**
