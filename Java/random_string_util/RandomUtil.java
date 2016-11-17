@@ -1,5 +1,7 @@
+package com.random_string_util;
 
 
+import org.omg.CORBA.Object;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -156,15 +158,17 @@ public class RandomUtil {
         }
     }
 
-
-
-
     @Test
     public void getLowerCase() {
         System.out.println();
         String[] Arr = {"小明", "小话", "小白", "小去","小2", "小4","小5", "小6"};
         System.out.println(getRandomList(Arr, 2));
         System.out.println(getRandomOne(Arr));
+//        System.out.println(getRandomStringFrom("站起身来知我者为",3));
+//        System.out.println(get1Phone());
+//        System.out.println(getRandomNumberString(10, 5));
+//        System.out.println(get1Email("126"));
+//        System.out.println(getRandomPositiveInteger(0,16));
     }
 
 

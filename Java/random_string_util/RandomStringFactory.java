@@ -1,3 +1,5 @@
+package com.random_string_util;
+
 import java.util.Arrays;
 
 /**
