@@ -1,129 +1,154 @@
-
-
+import java.util.Arrays;
 
 /**
  * Created by zing on 2016/11/15.
  */
-public class RandomUtil {
-    public static final char[] UPPER_CASE = {'A', 'B', 'C', 'D', 'I', 'J', 'K', 'L', 'Q', 'R', 'S', 'T',
-            'U', 'V', 'W', 'X', 'Y', 'Z'};
+public class RandomStringFactory {
 
-    public static final char[] LOWER_CASE = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-            'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    public int length;
+    public RandomStringFactory beforeFactory = null, afterFactory = null;
+    public String beforeString = "", afterString = "";
+    public char[] range;
 
-    public static final char[] SI = {'!', '#', '$', '%', '&', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@',
-            '[', ']', '^', '_', '{', '}'};
+    private RandomStringFactory() {
+    }
 
-    public static final char[] NUMBERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-
-
-    /**
-     * 随机获取一个手机号
-     *
-     * @return
-     */
-    public static String get1Phone() {
-        return "1" + getRandomStringFrom("3578", 1) + getRandomNumberString(9, 0);
+    public RandomStringFactory(int length, RandomStringFactory beforeFactory, RandomStringFactory afterFactory, String beforeString, String afterString, char[] range) {
+        this.length = length;
+        this.beforeFactory = beforeFactory;
+        this.afterFactory = afterFactory;
+        this.beforeString = beforeString;
+        this.afterString = afterString;
+        this.range = range;
     }
 
     /**
-     * 随机获取一个域名为domain的邮箱
+     * 根据规则，创建随机字符串
      *
-     * @param domain
      * @return
      */
-    public static String get1Email(String domain) {
-        if (domain == null || domain.equals("")) {
-            domain = getRandomString(3);
+    public String makeItToString() {
+        String now;
+        if (beforeFactory != null) {
+            beforeString += beforeFactory.makeItToString();
         }
-        if (!domain.startsWith("@")) {
-            domain = "@" + domain;
-        }
-        if (!domain.contains(".")) {
-            domain += ".com";
-        }
-        return RandomStringFactory.Builder.prepare(getRandomPositiveInteger(0, 16)).setAfterString(domain).build().makeItToString();
 
-    }
-
-    /**
-     * 获取一个随机的定长字符串
-     *
-     * @param length
-     * @return
-     */
-    public static String getRandomString(int length) {
-        return getRandomStringFrom(length, LOWER_CASE, UPPER_CASE, SI, NUMBERS);
-    }
-
-    /**
-     * 从一个字符数组中，获取长度为length的随机字符串
-     *
-     * @param range
-     * @param length
-     * @return
-     */
-    public static String getRandomStringFrom(int length, char[]... range) {
-        return RandomStringFactory.Builder.prepare(length).setRange(range).build().makeItToString();
-    }
-
-
-    /**
-     * 在一个字符串中，随机生成长度为length的字符串
-     *
-     * @param range
-     * @param length
-     * @return
-     */
-    public static String getRandomStringFrom(String range, int length) {
-        return RandomStringFactory.Builder.prepare(length).setRange(range.toCharArray()).build().makeItToString();
-    }
-
-
-    /**
-     * 获取一个整数，可以定义范围
-     *
-     * @param from
-     * @param to
-     * @return
-     */
-    public static int getRandomPositiveInteger(Integer from, Integer to) {
-        if (from == null) {
-            from = 0;
-        }
-        int space = to - from;
-        return (int) (Math.floor(Math.random() * space) + from);
-    }
-
-    /**
-     * 获取任意长度的任意数字字符串
-     *
-     * @param length
-     * @return
-     */
-    public static String getRandomNumberString(int length, int decimal) {
-        if (length <= 0) {
-            return "0";
-        }
-        if (decimal <= 0) {
-            return RandomStringFactory.Builder.prepare(length).setRange(NUMBERS).build().makeItToString();
-        }
-        if (decimal >= length) {
-            return RandomStringFactory.Builder.prepare(decimal).setBeforeString("0.").build().makeItToString();
+        if (length > 0 && range != null) {
+            char[] chars = new char[length];
+            for (int i = 0; i < length; i++) {
+                chars[i] = getRandomCase(range);
+            }
+            now = new String(chars);
         } else {
-            RandomStringFactory beforeFactory = RandomStringFactory.Builder.prepare(length - decimal).setRange(NUMBERS).setAfterString(".").build();
-            return RandomStringFactory.Builder.prepare(decimal).setBeforeFactory(beforeFactory).setRange(NUMBERS).build().makeItToString();
+            now = "";
         }
+
+        if (afterFactory != null) {
+            afterString += afterFactory.makeItToString();
+        }
+        return beforeString + now + afterString;
+    }
+
+    /**
+     * 从数组中获取一个随机的字符
+     *
+     * @param array
+     * @return
+     */
+    public char getRandomCase(char[] array) {
+        int len = array.length;
+        return array[(int) Math.floor(Math.random() * len)];
+    }
+
+    /**
+     * 拼接任意多个数组
+     *
+     * @param A
+     * @return
+     */
+    public static char[] concatArray(char[]... A) {
+        if (A == null) {
+            return null;
+        } else if (A.length == 1) {
+            return A[0];
+        }
+
+        int length = 0;
+        for (char[] c : A) {
+            length += c.length;
+        }
+        char[] allInOne = new char[length];
+        int step = 0;
+
+        for (char[] c : A) {
+            System.arraycopy(A, 0, allInOne, step, c.length);
+            step += c.length;
+        }
+        return allInOne;
+    }
+
+    @Override
+    public String toString() {
+        return "RandomStringFactory:\n" +
+                "length=" + length +
+                "\n, beforeFactory=" + beforeFactory +
+                "\n, afterFactory=" + afterFactory +
+                "\n, beforeString='" + beforeString + '\'' +
+                "\n, afterString='" + afterString + '\'' +
+                "\n, range=" + Arrays.toString(range);
+    }
+
+    static class Builder {
+
+        private int length;
+        private RandomStringFactory beforeFactory = null, afterFactory = null;
+        private String beforeString = "", afterString = "";
+        private char[] range;
+
+        private static Builder builder;
+
+        public Builder setLength(int length) {
+            builder.length = length;
+            return builder;
+        }
+
+        public Builder setBeforeFactory(RandomStringFactory beforeFactory) {
+            builder.beforeFactory = beforeFactory;
+            return builder;
+        }
+
+        public Builder setAfterFactory(RandomStringFactory afterFactory) {
+            builder.afterFactory = afterFactory;
+            return builder;
+        }
+
+        public Builder setBeforeString(String beforeString) {
+            builder.beforeString = beforeString;
+            return builder;
+        }
+
+        public Builder setAfterString(String afterString) {
+            builder.afterString = afterString;
+            return builder;
+        }
+
+        public Builder setRange(char[]... range) {
+            builder.range = concatArray(range);
+            return builder;
+        }
+
+        public static Builder prepare(int length) {
+            builder = new Builder();
+            builder.length = length;
+            return builder;
+        }
+
+        public RandomStringFactory build() {
+            return new RandomStringFactory(builder.length, builder.beforeFactory, builder.afterFactory, builder.beforeString, builder.afterString, builder.range);
+        }
+
+
     }
 
 
-
-
-
-//    @Test测试
-    public void getLowerCase() {
-        System.out.println();
-        System.out.println(get1Phone());
-        System.out.println(getRandomNumberString(10, 5));
-    }
 }

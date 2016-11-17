@@ -1,5 +1,10 @@
 
 
+import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by zing on 2016/11/15.
@@ -27,6 +32,40 @@ public class RandomUtil {
     }
 
     /**
+     * 从一个数组中生成一个length长度的随机的序列列表
+     *
+     * @param from
+     * @param length
+     * @param <T>
+     * @return
+     */
+    public <T> List<T> getRandomList(T[] from, int length) {
+        if (length <= 0 || length > from.length) {
+            return null;
+        } else {
+            int fromLength = from.length;
+            List<T> mo = new ArrayList();
+            for (int i = 0; i < length; i++) {
+                int footStep = (int) Math.floor(Math.random() * fromLength);
+                mo.add(from[footStep]);
+            }
+            return mo;
+        }
+    }
+
+    /**
+     * 从一个数组中生成一个length长度的随机的序列列表
+     *
+     * @param from
+     * @param <T>
+     * @return
+     */
+    public <T> T getRandomOne(T[] from) {
+        int footStep = (int) Math.floor(Math.random() * from.length);
+        return from[footStep];
+    }
+
+    /**
      * 随机获取一个域名为domain的邮箱
      *
      * @param domain
@@ -42,8 +81,9 @@ public class RandomUtil {
         if (!domain.contains(".")) {
             domain += ".com";
         }
-        return RandomStringFactory.Builder.prepare(getRandomPositiveInteger(4 , 16))
+        return RandomStringFactory.Builder.prepare(getRandomPositiveInteger(4, 16))
                 .setAfterString(domain).setRange(LOWER_CASE).build().makeItToString();
+
     }
 
     /**
@@ -64,7 +104,7 @@ public class RandomUtil {
      * @return
      */
     public static String getRandomStringFrom(int length, char[]... range) {
-        return getFormatString(RandomStringFactory.Builder.prepare(length).setRange(range).build());
+        return RandomStringFactory.Builder.prepare(length).setRange(range).build().makeItToString();
     }
 
 
@@ -76,7 +116,7 @@ public class RandomUtil {
      * @return
      */
     public static String getRandomStringFrom(String range, int length) {
-        return getFormatString(RandomStringFactory.Builder.prepare(length).setRange(range.toCharArray()).build());
+        return RandomStringFactory.Builder.prepare(length).setRange(range.toCharArray()).build().makeItToString();
     }
 
 
@@ -117,16 +157,15 @@ public class RandomUtil {
     }
 
 
-    public static String getFormatString(RandomStringFactory randomStyle) {
-        return randomStyle.makeItToString();
-    }
 
 
     @Test
     public void getLowerCase() {
         System.out.println();
-        System.out.println(get1Phone());
-        System.out.println(getRandomNumberString(10, 5));
-//        System.out.println(getRandomNumberString(15, 3));
+        String[] Arr = {"小明", "小话", "小白", "小去","小2", "小4","小5", "小6"};
+        System.out.println(getRandomList(Arr, 2));
+        System.out.println(getRandomOne(Arr));
     }
+
+
 }
