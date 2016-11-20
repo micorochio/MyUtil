@@ -83,7 +83,7 @@ public class RandomStringFactory {
         int step = 0;
 
         for (char[] c : A) {
-            System.arraycopy(A, 0, allInOne, step, c.length);
+            System.arraycopy(c, 0, allInOne, step, c.length);
             step += c.length;
         }
         return allInOne;
