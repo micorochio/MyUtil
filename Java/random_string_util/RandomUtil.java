@@ -55,17 +55,6 @@ public class RandomUtil {
         }
     }
 
-    /**
-     * 从一个数组中生成一个length长度的随机的序列列表
-     *
-     * @param from
-     * @param <T>
-     * @return
-     */
-    public <T> T getRandomOne(T[] from) {
-        int footStep = (int) Math.floor(Math.random() * from.length);
-        return from[footStep];
-    }
 
     /**
      * 随机获取一个域名为domain的邮箱
@@ -158,18 +147,37 @@ public class RandomUtil {
         }
     }
 
+
+    /**
+     * 从数组随机中抽出一个
+     *
+     * @param t
+     * @param <T>
+     * @return
+     */
+    public static <T> T getRandomOneFromArray(T[] t) {
+        if (t != null && t.length > 1) {
+            int len = t.length;
+            return t[getRandomPositiveInteger(0, len)];
+        } else {
+            return null;
+        }
+
+    }
+
+
     @Test
     public void getLowerCase() {
         System.out.println();
-        String[] Arr = {"小明", "小话", "小白", "小去","小2", "小4","小5", "小6"};
+        String[] Arr = {"小明", "小话", "小白", "小去", "小2", "小4", "小5", "小6"};
         System.out.println(getRandomList(Arr, 2));
-        System.out.println(getRandomOne(Arr));
+        System.out.println(getRandomOneFromArray(Arr));
+    }
+
+
 //        System.out.println(getRandomStringFrom("站起身来知我者为",3));
 //        System.out.println(get1Phone());
 //        System.out.println(getRandomNumberString(10, 5));
 //        System.out.println(get1Email("126"));
 //        System.out.println(getRandomPositiveInteger(0,16));
-    }
-
-
 }
