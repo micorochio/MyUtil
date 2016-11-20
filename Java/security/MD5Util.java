@@ -1,0 +1,56 @@
+package com.security;
+
+import com.zing.util.random_string_util.RandomUtil;
+
+import java.security.MessageDigest;
+
+/**
+ * Created by zing on 2016/11/20.
+ */
+public class MD5Util {
+
+    public final static String MD5(String s) {
+        char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        try {
+            byte[] btInput = s.getBytes();
+            // 获得MD5摘要算法的 MessageDigest 对象
+            MessageDigest mdInst = MessageDigest.getInstance("MD5");
+            // 使用指定的字节更新摘要
+            mdInst.update(btInput);
+            // 获得密文
+            byte[] md = mdInst.digest();
+            // 把密文转换成十六进制的字符串形式
+            int j = md.length;
+            char str[] = new char[j * 2];
+            int k = 0;
+            for (int i = 0; i < j; i++) {
+                byte byte0 = md[i];
+                str[k++] = hexDigits[byte0 >>> 4 & 0xf];
+                str[k++] = hexDigits[byte0 & 0xf];
+            }
+            return new String(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 配合随机工具使用
+     * @param s
+     * @return
+     */
+    public static MD5WithSalt MD5WithRandomSalt(String s) {
+        String randomSalt = RandomUtil.getRandomStringFrom(6, RandomUtil.UPPER_CASE);
+        s += randomSalt;
+        MD5WithSalt arg = new MD5WithSalt();
+        arg.salt = randomSalt;
+        arg.MD5Digest = MD5(s);
+        return arg;
+    }
+
+    static class MD5WithSalt {
+        public String salt;
+        public String MD5Digest;
+    }
+}
