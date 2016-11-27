@@ -5,11 +5,15 @@ import com.zing.util.random_string_util.RandomUtil;
 /**
  * Created by zing on 2016/11/20.
  */
+
+/**
+ * 基本不会用这个东西，还是自己随便写
+ */
 public class MD5WithSalt {
-    private String formerString;
-    private String salt = "";
-    private String MD5Result;
-    private int digestTimes = 1;
+    private String formerString;//源
+    private String salt = "";//盐
+    private String MD5Result;//加密结果
+    private int digestTimes = 1;//加密次数
 
     public MD5WithSalt(String formerString, String salt, int digestTimes) {
         this.formerString = formerString;
