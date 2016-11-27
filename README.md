@@ -14,7 +14,9 @@
 # captcha(验证码工具)
 CaptchaImageProducer +SpringMVC使用方法
 
-```
+
+```java
+
     @RequestMapping("/captcha")
     public void getCaptcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ImageIO.setUseCache(false);
